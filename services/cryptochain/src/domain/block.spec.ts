@@ -1,4 +1,4 @@
-import Block from "./block";
+import Block, { HashFn } from "./block";
 import { MineProps } from "./block";
 
 describe("Block", () => {
@@ -7,7 +7,7 @@ describe("Block", () => {
             const genesisBlock = Block.genesis();
             expect(genesisBlock.timestamp).toBe(1);
             expect(genesisBlock.lastHash).toBe("---");
-            expect(genesisBlock.data).toBe(null);
+            expect(genesisBlock.data).toBe("");
         });
     });
 
@@ -38,9 +38,11 @@ describe("Block", () => {
             expect(block.data).toBe(mineProps.data);
         });
 
-        it("should have a hash propery", () => {
+        it("should have a hash propery set", () => {
+            const hasherMock: HashFn = jest.fn().mockReturnValue("mock-hash");
+            Block.hasher = hasherMock;
             const block = Block.mineBlock(mineProps);
-            expect(block.hash).toBe("x");
+            expect(block.hash).toBe("mock-hash");
         });
     });
 });
