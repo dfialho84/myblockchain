@@ -1,11 +1,5 @@
 import Block from "../domain/block";
-
-export type BlockResponse = {
-    timestamp: number;
-    lastHash: string;
-    data: any;
-    hash: string;
-};
+import { BlockResponse } from "../dtos/blockchain-dtos";
 
 export function fromBlock(block: Block): BlockResponse {
     return {

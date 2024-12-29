@@ -1,0 +1,38 @@
+services:
+    eureka1:
+        build:
+            context: ../services/registry
+        container_name: eureka1
+        ports:
+            - "8761:8761"
+        environment:
+            EUREKA_INSTANCE_HOSTNAME: eureka1
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka2:8761/eureka/
+        healthcheck:
+            test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+            interval: 30s
+            timeout: 10s
+            retries: 3
+        networks:
+            - crypto-network
+
+    eureka2:
+        build:
+            context: ../services/registry
+        container_name: eureka2
+        ports:
+            - "8762:8761"
+        environment:
+            EUREKA_INSTANCE_HOSTNAME: eureka2
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka1:8761/eureka/
+        healthcheck:
+            test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+            interval: 30s
+            timeout: 10s
+            retries: 3
+        networks:
+            - crypto-network
+
+networks:
+    crypto-network:
+        driver: bridge
