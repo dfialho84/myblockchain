@@ -7,7 +7,7 @@ services:
             - "8761:8761"
         environment:
             EUREKA_INSTANCE_HOSTNAME: eureka1
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka2:8761/eureka/
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka2:8761/eureka/apps
         healthcheck:
             test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
             interval: 30s
@@ -24,7 +24,7 @@ services:
             - "8762:8761"
         environment:
             EUREKA_INSTANCE_HOSTNAME: eureka2
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka1:8761/eureka/
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka1:8761/eureka/apps
         healthcheck:
             test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
             interval: 30s
@@ -32,6 +32,40 @@ services:
             retries: 3
         networks:
             - crypto-network
+
+    cryptochain:
+        build:
+            context: ../services/cryptochain
+        container_name: cryptochain
+        ports:
+            - "8080:80"
+        environment:
+            PORT: 80
+            API_VERSION: v1
+            HOSTNAME: cryptochain
+            EUREKA_SERVERS: http://eureka1:8761/eureka/apps,http://eureka2:8761/eureka/apps
+        networks:
+            - crypto-network
+        depends_on:
+            - eureka1
+            - eureka2
+
+    cryptochain2:
+        build:
+            context: ../services/cryptochain
+        container_name: cryptochain2
+        ports:
+            - "8081:80"
+        environment:
+            PORT: 80
+            API_VERSION: v1
+            HOSTNAME: cryptochain2
+            EUREKA_SERVERS: http://eureka1:8761/eureka/apps,http://eureka2:8761/eureka/apps
+        networks:
+            - crypto-network
+        depends_on:
+            - eureka1
+            - eureka2
 
 networks:
     crypto-network:
