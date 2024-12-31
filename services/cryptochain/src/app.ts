@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import blockchainRoutes from "./routes/blockchain-routes";
+import walletRoutes from "./routes/wallet-routes";
 import config from "./config";
 
 dotenv.config();
@@ -14,9 +15,6 @@ app.use(express.json());
 config.init(app);
 
 app.use(`/api/${VERSION}/blocks`, blockchainRoutes);
-
-app.get("/", (req, res) => {
-    res.send("Hello, World!");
-});
+app.use(`/api/${VERSION}/wallet`, walletRoutes);
 
 export default app;

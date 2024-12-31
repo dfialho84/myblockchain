@@ -1,4 +1,4 @@
-import cryptoHash from "./crypto-hash";
+import { cryptoHash } from "./crypto-hash";
 
 export type BlockData = {
     toString: () => string;
