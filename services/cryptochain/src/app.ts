@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import blockchainRoutes from "./routes/blockchain-routes";
 import walletRoutes from "./routes/wallet-routes";
+import transactionRoutes from "./routes/transaction-routes";
 import config from "./config";
 
 dotenv.config();
@@ -14,7 +15,10 @@ app.use(express.json());
 
 config.init(app);
 
-app.use(`/api/${VERSION}/blocks`, blockchainRoutes);
-app.use(`/api/${VERSION}/wallet`, walletRoutes);
+const API_PREFIX = `/api/${VERSION}`;
+
+app.use(`${API_PREFIX}/blocks`, blockchainRoutes);
+app.use(`${API_PREFIX}/wallets`, walletRoutes);
+app.use(`${API_PREFIX}/transactions`, transactionRoutes);
 
 export default app;
