@@ -1,6 +1,6 @@
 export type BlockResponse = {
     timestamp: number;
     lastHash: string;
-    data: any;
+    data: string;
     hash: string;
 };
