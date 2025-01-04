@@ -111,21 +111,46 @@ describe("blockchain-controller", () => {
 
             blockchainController.getAllBlocks(req, res);
 
-            expect(blockchainService.getAllBlocks).toHaveBeenCalledWith(2, 2);
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith(expectedError);
         });
 
-        it("should return the number of remaining blocks if the page is the last one", () => {
-            expect(false).toBeTruthy();
-        });
+        it("should return the page 1 if the param is not provided", () => {
+            const req = {
+                locals: {
+                    pagination: {
+                        limit: 5,
+                    },
+                },
+            } as unknown as Request;
+            const res = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn().mockReturnThis(),
+            } as unknown as Response;
+            blockchainService.getAllBlocks = jest.fn();
 
-        it("should return the page 1 if the param is not privided", () => {
-            expect(false).toBeTruthy();
+            blockchainController.getAllBlocks(req, res);
+
+            expect(blockchainService.getAllBlocks).toHaveBeenCalledWith(0, 5);
         });
 
         it("should return a page of default size if the param is not privided", () => {
-            expect(false).toBeTruthy();
+            const req = {
+                locals: {
+                    pagination: {
+                        offset: 2,
+                    },
+                },
+            } as unknown as Request;
+            const res = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn().mockReturnThis(),
+            } as unknown as Response;
+            blockchainService.getAllBlocks = jest.fn();
+
+            blockchainController.getAllBlocks(req, res);
+
+            expect(blockchainService.getAllBlocks).toHaveBeenCalledWith(2, 10);
         });
     });
 });
