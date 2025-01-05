@@ -11,10 +11,6 @@ describe("validation", () => {
             test: z.number().min(10, "xxxxx"),
         });
 
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
-
         it("should validate the request body", () => {
             const res: Response = {} as unknown as Response;
 

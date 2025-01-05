@@ -21,8 +21,4 @@ describe("WalletService", () => {
             expect(wallet.privateKey).toEqual("privateKey");
         });
     });
-
-    afterAll(() => {
-        jest.clearAllMocks();
-    });
 });
