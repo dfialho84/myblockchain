@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import BlockchainService from "../services/blockchain-service";
-import { OutOfBoundsError } from "../exceptions";
+import BlockchainService from "../../../../application/services/blockchain-service";
+import { OutOfBoundsError } from "../../../../application/exceptions";
 
 export default class BlockchainController {
     private blockcahinService: BlockchainService;

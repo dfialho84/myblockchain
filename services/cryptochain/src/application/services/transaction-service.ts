@@ -1,7 +1,7 @@
 import {
     NewTransactionRequest,
     TransactionResponse,
-} from "../dtos/transaction-dtos";
+} from "../../domain/value-objects/transaction-dtos";
 
 export default class TransactionService {
     newTransaction(newTransaction: NewTransactionRequest): TransactionResponse {

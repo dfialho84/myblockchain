@@ -1,4 +1,4 @@
-import { BlockResponse } from "../dtos/blockchain-dtos";
+import { BlockResponse } from "../../domain/value-objects/blockchain-dtos";
 
 export default class BlockchainService {
     public constructor() {}

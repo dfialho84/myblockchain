@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import BlockchainService from "../services/blockchain-service";
+import BlockchainService from "../../../../application/services/blockchain-service";
 import BlockchainController from "./blockchain-controller";
-import { BlockResponse } from "../dtos/blockchain-dtos";
+import { BlockResponse } from "../../../../domain/value-objects/blockchain-dtos";
 import { ApiError } from "../validation";
-import { OutOfBoundsError } from "../exceptions";
+import { OutOfBoundsError } from "../../../../application/exceptions";
 
 describe("blockchain-controller", () => {
     let blockchainController: BlockchainController;

@@ -1,4 +1,4 @@
-import Block from "../domain/block";
+import Block from "../entities/block";
 import { fromBlock } from "./block-mapper";
 
 describe("BlockMapper", () => {

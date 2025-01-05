@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-import blockchainRoutes from "./routes/blockchain-routes";
-import walletRoutes from "./routes/wallet-routes";
-import transactionRoutes from "./routes/transaction-routes";
+import blockchainRoutes from "./adapters/in/http/routes/blockchain-routes";
+import walletRoutes from "./adapters/in/http/routes/wallet-routes";
+import transactionRoutes from "./adapters/in/http/routes/transaction-routes";
 import config from "./config";
 
 dotenv.config();

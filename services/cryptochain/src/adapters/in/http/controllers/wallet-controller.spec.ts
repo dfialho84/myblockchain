@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import WalletController from "./wallet-controller";
-import WalletService from "../services/wallet-service";
-import { NewWalletResponse } from "../dtos/wallet-dtos";
+import WalletService from "../../../../application/services/wallet-service";
+import { NewWalletResponse } from "../../../../domain/value-objects/wallet-dtos";
 
 describe("WalletController", () => {
     let walletService: WalletService;

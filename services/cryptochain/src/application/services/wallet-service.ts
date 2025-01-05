@@ -1,5 +1,5 @@
-import { NewWalletResponse } from "../dtos/wallet-dtos";
-import { genKeyPair } from "../domain/crypto-hash";
+import { NewWalletResponse } from "../../domain/value-objects/wallet-dtos";
+import { genKeyPair } from "../../domain/entities/crypto-hash";
 
 export default class WalletService {
     createWallet(): NewWalletResponse {

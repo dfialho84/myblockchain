@@ -1,9 +1,9 @@
 import { Express } from "express";
-import RegistryClient from "../infrastructure/registry-client";
-import WalletController from "../controllers/wallet-controller";
-import WalletService from "../services/wallet-service";
-import TransactionService from "../services/transaction-service";
-import TransactionController from "../controllers/transaction-controller";
+import RegistryClient from "../adapters/out/registry/registry-client";
+import WalletController from "../adapters/in/http/controllers/wallet-controller";
+import WalletService from "../application/services/wallet-service";
+import TransactionService from "../application/services/transaction-service";
+import TransactionController from "../adapters/in/http/controllers/transaction-controller";
 
 class Config {
     private _registryClient: RegistryClient | null;

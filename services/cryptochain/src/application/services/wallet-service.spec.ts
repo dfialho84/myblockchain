@@ -1,7 +1,7 @@
 import WalletService from "./wallet-service";
 
 let genKeyPairMock = jest.fn();
-jest.mock("../domain/crypto-hash", () => ({
+jest.mock("../../domain/entities/crypto-hash", () => ({
     genKeyPair: () => genKeyPairMock(),
 }));
 

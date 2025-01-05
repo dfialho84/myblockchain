@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TransactionService from "../services/transaction-service";
+import TransactionService from "../../../../application/services/transaction-service";
 
 export default class TransactionController {
     private transactionService: TransactionService;

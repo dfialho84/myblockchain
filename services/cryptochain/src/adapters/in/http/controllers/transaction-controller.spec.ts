@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import TransactionController from "./transaction-controller";
-import TransactionService from "../services/transaction-service";
-import { TransactionResponse } from "../dtos/transaction-dtos";
+import TransactionService from "../../../../application/services/transaction-service";
+import { TransactionResponse } from "../../../../domain/value-objects/transaction-dtos";
 import { ApiError } from "../validation";
 
 describe("TransactionController", () => {
