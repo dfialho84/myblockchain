@@ -1,4 +1,4 @@
-import WalletService from "./wallet-service";
+import WalletServiceImpl from "./wallet-service-impl";
 
 let genKeyPairMock = jest.fn();
 jest.mock("../../domain/entities/crypto-hash", () => ({
@@ -13,7 +13,7 @@ describe("WalletService", () => {
                 privateKey: "privateKey",
             });
 
-            const walletService = new WalletService();
+            const walletService = new WalletServiceImpl();
 
             const wallet = walletService.createWallet();
 

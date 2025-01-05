@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import BlockchainService from "../../../../application/services/blockchain-service";
+import { BlockchainService } from "../../../../application/ports/in/services";
 import BlockchainController from "./blockchain-controller";
 import { BlockResponse } from "../../../../domain/value-objects/blockchain-dtos";
 import { ApiError } from "../validation";

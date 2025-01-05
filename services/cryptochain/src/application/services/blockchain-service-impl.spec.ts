@@ -1,4 +1,4 @@
-import BlockchainService from "./blockchain-service";
+import BlockchainService from "./blockchain-service-impl";
 
 describe("Blockchain Service", () => {
     let blockchainService: BlockchainService;

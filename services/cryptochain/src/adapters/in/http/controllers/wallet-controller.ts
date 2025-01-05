@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import WalletService from "../../../../application/services/wallet-service";
+import { WalletService } from "../../../../application/ports/in/services";
 
 type NewWalletController = {
     walletService: WalletService;

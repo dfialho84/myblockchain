@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import TransactionController from "./transaction-controller";
-import TransactionService from "../../../../application/services/transaction-service";
+import { TransactionService } from "../../../../application/ports/in/services";
 import { TransactionResponse } from "../../../../domain/value-objects/transaction-dtos";
 import { ApiError } from "../validation";
 
