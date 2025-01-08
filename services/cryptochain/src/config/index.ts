@@ -1,11 +1,15 @@
 import { Express } from "express";
 import RegistryClient from "../adapters/out/registry/registry-client";
 import WalletController from "../adapters/in/http/controllers/wallet-controller";
-import { WalletService } from "../application/ports/in/services";
+import {
+    BlockchainService,
+    WalletService,
+} from "../application/ports/in/services";
 import WalletServiceImpl from "../application/services/wallet-service-impl";
 import { TransactionService } from "../application/ports/in/services";
 import TransactionServiceImpl from "../application/services/transaction-service-impl";
 import TransactionController from "../adapters/in/http/controllers/transaction-controller";
+import BlockchainServiceImpl from "../application/services/blockchain-service-impl";
 
 class Config {
     private _registryClient: RegistryClient | null;
@@ -13,6 +17,7 @@ class Config {
     private _walletController: WalletController;
     private _transactionService: TransactionService;
     private _transactionController: TransactionController;
+    private _blockchainService: BlockchainService;
 
     constructor() {
         this._registryClient = null;
@@ -24,14 +29,16 @@ class Config {
         this._transactionController = new TransactionController(
             this._transactionService
         );
+        this._blockchainService = new BlockchainServiceImpl();
     }
 
-    init(app: Express) {
+    async init(app: Express) {
         const register = process.env.REGISTER === "true";
         if (register) {
             this._registryClient = new RegistryClient(app);
             this._registryClient.start();
         }
+        await this.blockcainService.sync();
     }
 
     get walletController(): WalletController {
@@ -40,6 +47,10 @@ class Config {
 
     get transactionController(): TransactionController {
         return this._transactionController;
+    }
+
+    get blockcainService(): BlockchainService {
+        return this._blockchainService;
     }
 }
 

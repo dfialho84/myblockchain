@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import WalletController from "./wallet-controller";
-import { NewWalletResponse } from "../../../../domain/value-objects/wallet-dtos";
+import { NewWalletResponse } from "../../../../application/dto/wallet-dtos";
 import { WalletService } from "../../../../application/ports/in/services";
 
 describe("WalletController", () => {

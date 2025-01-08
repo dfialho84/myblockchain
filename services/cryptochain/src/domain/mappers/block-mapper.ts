@@ -1,5 +1,5 @@
 import Block from "../entities/block";
-import { BlockResponse } from "../value-objects/blockchain-dtos";
+import { BlockResponse } from "../../application/dto/blockchain-dtos";
 
 export function fromBlock(block: Block): BlockResponse {
     return {

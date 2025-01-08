@@ -3,7 +3,7 @@ import app from "./app";
 import {
     NewTransactionRequest,
     TransactionResponse,
-} from "./domain/value-objects/transaction-dtos";
+} from "./application/dto/transaction-dtos";
 
 describe("Endpoints integration tests", () => {
     beforeAll(() => {

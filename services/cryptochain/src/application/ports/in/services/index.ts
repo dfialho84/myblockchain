@@ -1,11 +1,12 @@
-import { BlockResponse } from "../../../../domain/value-objects/blockchain-dtos";
-import { NewWalletResponse } from "../../../../domain/value-objects/wallet-dtos";
+import { BlockResponse } from "../../../dto/blockchain-dtos";
+import { NewWalletResponse } from "../../../dto/wallet-dtos";
 import {
     TransactionResponse,
     NewTransactionRequest,
-} from "../../../../domain/value-objects/transaction-dtos";
+} from "../../../dto/transaction-dtos";
 
 export interface BlockchainService {
+    sync: () => Promise<void>;
     getAllBlocks: (offset: number, limit: number) => Array<BlockResponse>;
 }
 
