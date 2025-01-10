@@ -1,11 +1,16 @@
 import BlockchainValidator from "./blockchain-validator";
+import { HasherFn, BlockDataValidator } from "./blockchain-validator";
 import { Block, GENESIS_BLOCK } from "../../../domain/entities/block";
 
 describe("BlockchainValidator", () => {
     let validator: BlockchainValidator;
+    let blockDataValidator: BlockDataValidator;
+    let hasherMock: HasherFn;
 
     beforeEach(() => {
-        validator = new BlockchainValidator();
+        hasherMock = jest.fn() as unknown as HasherFn;
+        blockDataValidator = {} as BlockDataValidator;
+        validator = new BlockchainValidator(hasherMock, blockDataValidator);
     });
 
     describe("validateChain", () => {
@@ -21,10 +26,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "dsfgdgfsdgsd",
-                reward: {
-                    address: "xxxxx",
-                    amount: 0,
-                },
                 hash: "",
                 difficulty: 3,
             };
@@ -39,10 +40,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "dsfgdgfsdgsd",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "",
                 difficulty: 3,
             };
@@ -57,10 +54,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "",
                 difficulty: 2,
             };
@@ -75,10 +68,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "000xxxxxxx",
                 difficulty: 3,
             };
@@ -87,10 +76,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "000xxxxxxx",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "0xxxxxx",
                 difficulty: 1,
             };
@@ -105,10 +90,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "dsfgdgfsdgsd",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "000xxxxxxx",
                 difficulty: 3,
             };
@@ -117,10 +98,6 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "dsfgdgfsdgsd",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
                 hash: "0xxxxxx",
                 difficulty: 5,
             };
@@ -135,11 +112,7 @@ describe("BlockchainValidator", () => {
                 timestamp: 123243,
                 data: "dsfdsffsd",
                 lastHash: "",
-                reward: {
-                    address: "xxxxx",
-                    amount: 100,
-                },
-                hash: "00xxxxxxxx",
+                hash: "00xxxxxxx",
                 difficulty: 3,
             };
             const chain: Block[] = [GENESIS_BLOCK, block1];
@@ -148,27 +121,85 @@ describe("BlockchainValidator", () => {
         });
 
         it("should return false when the hash is not valid", () => {
-            expect(false).toBeTruthy();
+            (hasherMock as jest.Mock).mockReturnValue("invalid hash");
+
+            const block1: Block = {
+                nonce: 0,
+                timestamp: 123243,
+                data: "dsfdsffsd",
+                lastHash: "",
+                hash: "000xxxxxxx",
+                difficulty: 3,
+            };
+            const chain: Block[] = [GENESIS_BLOCK, block1];
+
+            expect(validator.validateChain(chain)).toEqual(false);
         });
 
         it("should return false when the number os zeroes diminished and the time between blocks is lower than the minimum", () => {
-            expect(false).toBeTruthy();
-        });
+            const hashes = ["000xxxxxxxx", "00xxxxxxxxxxxx"];
+            (hasherMock as jest.Mock)
+                .mockImplementationOnce(() => hashes[0])
+                .mockImplementationOnce(() => hashes[1]);
 
-        it("should return false when the amount to the miner is incorrect", () => {
-            expect(false).toBeTruthy();
+            const block1: Block = {
+                nonce: 0,
+                timestamp: 1,
+                data: "dsfdsffsd",
+                lastHash: "",
+                hash: hashes[0],
+                difficulty: 3,
+            };
+            const block2: Block = {
+                nonce: 0,
+                timestamp: 5,
+                data: "dsfdsffsd",
+                lastHash: hashes[0],
+                hash: hashes[1],
+                difficulty: 2,
+            };
+            const chain: Block[] = [GENESIS_BLOCK, block1, block2];
+
+            expect(validator.validateChain(chain)).toEqual(false);
         });
 
         it("should return false when there are any invalid transaction on the data", () => {
-            expect(false).toBeTruthy();
+            (hasherMock as jest.Mock).mockReturnValueOnce("000xxxxxxxx");
+            blockDataValidator.validate = jest.fn().mockReturnValue(false);
+            const block1: Block = {
+                nonce: 0,
+                timestamp: 123243,
+                data: "dsfdsffsd",
+                lastHash: "",
+                hash: "000xxxxxxxx",
+                difficulty: 3,
+            };
+            const chain: Block[] = [GENESIS_BLOCK, block1];
+
+            expect(validator.validateChain(chain)).toEqual(false);
         });
 
         it("should return true for a chain with only the genesis block", () => {
-            expect(false).toBeTruthy();
+            blockDataValidator.validate = jest.fn().mockReturnValue(true);
+            const chain: Block[] = [GENESIS_BLOCK];
+
+            expect(validator.validateChain(chain)).toEqual(true);
         });
 
         it("should return true for a valid chain", () => {
-            expect(false).toBeTruthy();
+            (hasherMock as jest.Mock).mockReturnValueOnce("000xxxxxxxx");
+            blockDataValidator.validate = jest.fn().mockReturnValue(true);
+            const block1: Block = {
+                nonce: 0,
+                timestamp: 123243,
+                data: "dsfdsffsd",
+                lastHash: "",
+                hash: "000xxxxxxxx",
+                difficulty: 3,
+            };
+            const chain: Block[] = [GENESIS_BLOCK, block1];
+
+            expect(validator.validateChain(chain)).toEqual(true);
         });
     });
 });

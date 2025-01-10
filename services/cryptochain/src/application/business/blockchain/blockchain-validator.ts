@@ -1,19 +1,33 @@
 import { Block, GENESIS_BLOCK } from "../../../domain/entities/block";
 
-type hasher = (...inputs: string[]) => string;
+export type HasherFn = (...inputs: string[]) => string;
+export type BlockDataValidator = {
+    validate: (chain: Block[]) => boolean;
+};
 
 function startsWithNZeroes(str: string, n: number): boolean {
     const zeroes = "0".repeat(n);
     return str.startsWith(zeroes);
 }
 
+const TIME_BTW_BLOCKS_MS = 300000;
+
 export default class BlockchainValidator {
+    constructor(
+        private hasher: HasherFn,
+        private dataValidator: BlockDataValidator
+    ) {}
+
     public validateChain(chain: Block[]): boolean {
         if (chain.length === 0) {
             return false;
         }
         if (!this.hasGenesisBlock(chain)) {
             return false;
+        }
+
+        if (chain.length === 1) {
+            return true;
         }
 
         if (!this.validateInitialZeroes(chain)) {
@@ -28,7 +42,11 @@ export default class BlockchainValidator {
             }
         }
 
-        throw new Error("Not implemented");
+        if (!this.dataValidator.validate(chain)) {
+            return false;
+        }
+
+        return true;
     }
 
     private hasGenesisBlock(chain: Block[]): boolean {
@@ -46,8 +64,6 @@ export default class BlockchainValidator {
                 block.timestamp !== GENESIS_BLOCK.timestamp ||
                 block.lastHash !== GENESIS_BLOCK.lastHash ||
                 block.hash !== GENESIS_BLOCK.hash ||
-                block.reward.address !== GENESIS_BLOCK.reward.address ||
-                block.reward.amount !== GENESIS_BLOCK.reward.amount ||
                 block.difficulty !== GENESIS_BLOCK.difficulty ||
                 block.nonce !== GENESIS_BLOCK.nonce
             ) {
@@ -73,6 +89,14 @@ export default class BlockchainValidator {
         if (!this.validateDifficulty(block)) {
             return false;
         }
+
+        if (!this.validateHash(block)) {
+            return false;
+        }
+
+        if (!this.validateTimeJumps(block, previous)) {
+            return false;
+        }
         return true;
     }
 
@@ -86,5 +110,27 @@ export default class BlockchainValidator {
 
     private validateDifficulty(block: Block): boolean {
         return startsWithNZeroes(block.hash, block.difficulty);
+    }
+
+    private validateHash(block: Block): boolean {
+        const hash: string = this.hasher(
+            JSON.stringify(block.data),
+            block.difficulty.toString(),
+            block.lastHash,
+            block.nonce.toString(),
+            block.timestamp.toString()
+        );
+        return block.hash === hash;
+    }
+
+    private validateTimeJumps(block: Block, previous: Block): boolean {
+        const allowDifficultyReduction =
+            block.timestamp - previous.timestamp > TIME_BTW_BLOCKS_MS;
+        const difficultyDiff = block.difficulty - previous.difficulty;
+        if (difficultyDiff >= 0) {
+            return true;
+        }
+
+        return allowDifficultyReduction;
     }
 }

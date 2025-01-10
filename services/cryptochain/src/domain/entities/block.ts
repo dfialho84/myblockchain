@@ -1,12 +1,9 @@
-import { cryptoHash } from "./crypto-hash";
+import { Transaction, TransactionEntry } from "./transaction";
 
 export type BlockData = {
+    // transactions: Transaction[];
+    // reward: TransactionEntry;
     toString: () => string;
-};
-
-export type BlockReward = {
-    address: string;
-    amount: number;
 };
 
 export type Block = {
@@ -16,7 +13,6 @@ export type Block = {
     readonly data: BlockData;
     readonly difficulty: number;
     readonly hash: string;
-    readonly reward: BlockReward;
 };
 
 export const GENESIS_BLOCK: Block = {
@@ -25,9 +21,9 @@ export const GENESIS_BLOCK: Block = {
     lastHash: "",
     data: "",
     hash: "",
-    reward: {
-        address: "diego",
-        amount: 9007199254740991,
-    },
+    // reward: {
+    //     address: "diego",
+    //     amount: 9007199254740991,
+    // },
     difficulty: 3,
 };
